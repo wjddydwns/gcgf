@@ -1,211 +1,163 @@
 import { useState } from "react";
+
+import Calendar from "./components/Calendar";
+import PersonList from "./components/PersonList";
+import SaveButtons from "./components/SaveButtons";
+
 import "./App.css";
 
 function App() {
+  // 선택된 날짜
   const [selectedDate, setSelectedDate] = useState(null);
-  const [type, setType] = useState("individual");
-  const [selectedPerson, setSelectedPerson] = useState(null);
 
-  const people = {
-    individual: [
-      { id: 1, name: "김철수" },
-      { id: 2, name: "이영희" },
-      { id: 3, name: "박민수" },
-      { id: 4, name: "최지훈" },
-    ],
-    group: [
-      { id: 101, name: "개발팀" },
-      { id: 102, name: "경영지원팀" },
-      { id: 103, name: "인사팀" },
-      { id: 104, name: "기획팀" },
-    ],
+  // 체크된 사람
+  const [checkedPeople, setCheckedPeople] = useState([]);
+
+  // 날짜별 저장 데이터
+  const [savedData, setSavedData] = useState({});
+
+  // 사람 목록
+  const people = [
+    { id: 1, name: "김철수" },
+    { id: 2, name: "이영희" },
+    { id: 3, name: "박민수" },
+    { id: 4, name: "최지훈" },
+    { id: 5, name: "정수진" },
+    { id: 6, name: "강민호" },
+  ];
+
+  // 날짜 선택
+  const handleDateClick = (date) => {
+    setSelectedDate(date);
+
+    // 이미 저장된 날짜라면 체크 상태 복원
+    if (savedData[date]) {
+      setCheckedPeople(savedData[date].people);
+    } else {
+      setCheckedPeople([]);
+    }
   };
 
-  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+  // 체크박스 선택
+  const handleCheck = (id) => {
+    setCheckedPeople((prev) => {
+      if (prev.includes(id)) {
+        return prev.filter(
+          (personId) => personId !== id
+        );
+      }
+
+      return [...prev, id];
+    });
+  };
+
+  // 개인 / 단체 저장
+  const handleSave = (type) => {
+    if (!selectedDate) {
+      alert("먼저 날짜를 선택해주세요.");
+      return;
+    }
+
+    if (checkedPeople.length === 0) {
+      alert("사람을 한 명 이상 선택해주세요.");
+      return;
+    }
+
+    setSavedData((prev) => ({
+      ...prev,
+
+      [selectedDate]: {
+        type,
+        people: checkedPeople,
+      },
+    }));
+
+    alert(
+      `${type === "individual" ? "개인" : "단체"}으로 저장되었습니다.`
+    );
+  };
 
   return (
     <div className="app">
 
+      {/* 제목 */}
       <div className="title">
-        <h1>일정 선택</h1>
-        <p>날짜와 대상자를 선택해주세요.</p>
+        <h1>대상자 관리</h1>
+
+        <p>
+          날짜를 선택한 후 대상자를 선택해주세요.
+        </p>
       </div>
 
       <div className="content">
 
         {/* 달력 */}
-        <div className="card">
-          <h2>날짜 선택</h2>
+        <Calendar
+          selectedDate={selectedDate}
+          savedData={savedData}
+          onDateClick={handleDateClick}
+        />
 
-          <div className="calendar">
-
-            <h3>2026년 9월</h3>
-
-            <div className="calendar-week">
-              {["일", "월", "화", "수", "목", "금", "토"].map(
-                (day) => (
-                  <div key={day}>{day}</div>
-                )
-              )}
-            </div>
-
-            <div className="calendar-days">
-
-              {/* 9월 1일이 화요일이므로 앞에 빈칸 2개 */}
-              <div></div>
-              <div></div>
-
-              {days.map((day) => {
-                const date = `2026-09-${String(day).padStart(
-                  2,
-                  "0"
-                )}`;
-
-                return (
-                  <button
-                    key={day}
-                    className={
-                      selectedDate === date
-                        ? "date selected"
-                        : "date"
-                    }
-                    onClick={() => {
-                      setSelectedDate(date);
-                      setSelectedPerson(null);
-                    }}
-                  >
-                    {day}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-
-        {/* 사람 선택 */}
+        {/* 사람 목록 */}
         <div className="card">
 
           <h2>대상자 선택</h2>
 
-          <p>
+          <p className="selected-date">
             {selectedDate
               ? selectedDate
-              : "먼저 날짜를 선택해주세요."}
+              : "날짜를 먼저 선택해주세요."}
           </p>
 
-          <div className="tabs">
+          <PersonList
+            people={people}
+            checkedPeople={checkedPeople}
+            selectedDate={selectedDate}
+            onCheck={handleCheck}
+          />
 
-            <button
-              className={
-                type === "individual"
-                  ? "tab active"
-                  : "tab"
-              }
-              onClick={() => {
-                setType("individual");
-                setSelectedPerson(null);
-              }}
-            >
-              개인
-            </button>
-
-            <button
-              className={
-                type === "group"
-                  ? "tab active"
-                  : "tab"
-              }
-              onClick={() => {
-                setType("group");
-                setSelectedPerson(null);
-              }}
-            >
-              단체
-            </button>
-
-          </div>
-
-          <div className="person-list">
-
-            <div className="person-header">
-              <div>
-                {type === "individual" ? "이름" : "단체명"}
-              </div>
-              <div>선택</div>
-            </div>
-
-            {people[type].map((person) => {
-
-              const isSelected =
-                selectedPerson?.id === person.id;
-
-              return (
-                <div
-                  key={person.id}
-                  className={
-                    isSelected
-                      ? "person-row selected"
-                      : "person-row"
-                  }
-                >
-                  <div>{person.name}</div>
-
-                  <div>
-                    <button
-                      className={
-                        isSelected
-                          ? "select-button selected"
-                          : "select-button"
-                      }
-                      onClick={() =>
-                        setSelectedPerson(person)
-                      }
-                    >
-                      {isSelected ? "선택됨" : "선택"}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-
-          </div>
+          <SaveButtons
+            onSaveIndividual={() =>
+              handleSave("individual")
+            }
+            onSaveGroup={() =>
+              handleSave("group")
+            }
+          />
 
         </div>
       </div>
 
-      {/* 선택 결과 */}
-      {selectedPerson && (
-        <div className="result">
+      {/* 저장 정보 */}
+      {selectedDate && savedData[selectedDate] && (
+        <div className="saved-card">
 
-          <h2>선택 정보</h2>
+          <h2>저장된 정보</h2>
 
-          <div className="result-info">
+          <p>
+            <strong>날짜</strong> : {selectedDate}
+          </p>
 
-            <div className="result-item">
-              <span>날짜</span>
-              {selectedDate}
-            </div>
+          <p>
+            <strong>구분</strong> :{" "}
+            {savedData[selectedDate].type ===
+            "individual"
+              ? "개인"
+              : "단체"}
+          </p>
 
-            <div className="result-item">
-              <span>구분</span>
-              {type === "individual" ? "개인" : "단체"}
-            </div>
+          <p>
+            <strong>대상자</strong> :{" "}
+            {savedData[selectedDate].people
+              .map((id) => {
+                const person = people.find(
+                  (p) => p.id === id
+                );
 
-            <div className="result-item">
-              <span>대상자</span>
-              {selectedPerson.name}
-            </div>
-
-          </div>
-
-          <button
-            className="submit-button"
-            onClick={() =>
-              alert("선택이 완료되었습니다.")
-            }
-          >
-            선택 완료
-          </button>
+                return person?.name;
+              })
+              .join(", ")}
+          </p>
 
         </div>
       )}

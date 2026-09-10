@@ -1,3 +1,4 @@
+
 * {
   box-sizing: border-box;
 }
@@ -5,14 +6,20 @@
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background-color: #f5f6f8;
+  background: #f5f6f8;
+}
+
+button {
+  font-family: inherit;
 }
 
 .app {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 20px;
+  padding: 50px 20px;
 }
+
+/* 제목 */
 
 .title {
   margin-bottom: 30px;
@@ -29,6 +36,7 @@ body {
 }
 
 /* 메인 */
+
 .content {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -37,123 +45,35 @@ body {
 
 .card {
   background: white;
+  border: 1px solid #e5e5e5;
   border-radius: 12px;
   padding: 24px;
-  border: 1px solid #e5e5e5;
 }
 
 .card h2 {
   margin-top: 0;
 }
 
-/* 개인 / 단체 탭 */
-.tabs {
+/* 달력 */
+
+.calendar-header {
   display: flex;
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-}
-
-.tab {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  background: white;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.tab.active {
-  color: #000;
-  font-weight: bold;
-  border-bottom: 2px solid #000;
-}
-
-/* 사람 목록 */
-.person-list {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.person-header,
-.person-row {
-  display: grid;
-  grid-template-columns: 1fr 100px;
   align-items: center;
-}
-
-.person-header {
-  padding: 12px 16px;
-  background: #f7f7f7;
-  font-size: 14px;
-  color: #666;
-}
-
-.person-row {
-  padding: 14px 16px;
-  border-top: 1px solid #eee;
-}
-
-.person-row.selected {
-  background: #f5f5f5;
-}
-
-.select-button {
-  padding: 8px 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  background: white;
-  cursor: pointer;
-}
-
-.select-button.selected {
-  background: #222;
-  color: white;
-  border-color: #222;
-}
-
-/* 선택 정보 */
-.result {
-  margin-top: 20px;
-  background: white;
-  border: 1px solid #e5e5e5;
-  border-radius: 12px;
-  padding: 24px;
-}
-
-.result-info {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-.result-item {
-  padding: 16px;
-  background: #f7f7f7;
-  border-radius: 8px;
-}
-
-.result-item span {
-  display: block;
-  margin-bottom: 5px;
-  font-size: 12px;
-  color: #777;
-}
-
-.submit-button {
-  width: 100%;
-  margin-top: 20px;
-  padding: 14px;
-  border: none;
-  border-radius: 7px;
-  background: #222;
-  color: white;
-  cursor: pointer;
-  font-size: 15px;
-}
-.calendar h3 {
-  text-align: center;
+  justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+  margin: 0;
+}
+
+.calendar-header button {
+  width: 35px;
+  height: 35px;
+  border: none;
+  background: white;
+  font-size: 24px;
+  cursor: pointer;
 }
 
 .calendar-week,
@@ -166,17 +86,22 @@ body {
 .calendar-week {
   margin-bottom: 5px;
   text-align: center;
-  font-size: 14px;
-  font-weight: bold;
   color: #777;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .date {
-  height: 40px;
+  position: relative;
+  height: 55px;
   border: none;
+  border-radius: 7px;
   background: white;
-  border-radius: 6px;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .date:hover {
@@ -187,13 +112,132 @@ body {
   background: #222;
   color: white;
 }
+
+.date small {
+  margin-top: 3px;
+  font-size: 9px;
+}
+
+/* 선택 날짜 */
+
+.selected-date {
+  margin-bottom: 20px;
+  color: #777;
+}
+
+/* 사람 목록 */
+
+.person-list {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.person-header,
+.person-row {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  align-items: center;
+}
+
+.person-header {
+  padding: 13px 16px;
+  background: #f7f7f7;
+  color: #666;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.person-row {
+  padding: 14px 16px;
+  border-top: 1px solid #eee;
+  cursor: pointer;
+}
+
+.person-row:hover {
+  background: #fafafa;
+}
+
+.person-row.checked {
+  background: #f2f2f2;
+}
+
+.person-row input {
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+.person-name {
+  font-weight: 500;
+}
+
+/* 선택 인원 */
+
+.selected-count {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* 저장 버튼 */
+
+.save-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.save-buttons button {
+  padding: 13px;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.individual-button {
+  background: #222;
+  color: white;
+}
+
+.group-button {
+  background: #555;
+  color: white;
+}
+
+.save-buttons button:hover {
+  opacity: 0.85;
+}
+
+/* 저장 정보 */
+
+.saved-card {
+  margin-top: 20px;
+  padding: 24px;
+  background: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+
+.saved-card h2 {
+  margin-top: 0;
+}
+
+.saved-card p {
+  margin: 10px 0;
+}
+
 /* 모바일 */
+
 @media (max-width: 700px) {
   .content {
     grid-template-columns: 1fr;
   }
 
-  .result-info {
+  .save-buttons {
     grid-template-columns: 1fr;
   }
 }
