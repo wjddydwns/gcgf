@@ -4,49 +4,75 @@ function PersonList({
   selectedDate,
   onCheck,
 }) {
+  const positions = [
+    "계장",
+    "대리",
+    "과장",
+    "차장",
+    "팀장",
+    "부장",
+  ];
+
   return (
-    <>
-      <div className="person-list">
+    <div className="person-groups">
+      {positions.map((position) => {
+        const positionPeople = people.filter(
+          (person) =>
+            person.position === position
+        );
 
-        <div className="person-header">
-          <div>선택</div>
-          <div>이름</div>
-        </div>
+        return (
+          <details
+            key={position}
+            className="person-group"
+            open
+          >
+            <summary>
+              <span>{position}</span>
 
-        {people.map((person) => {
-          const isChecked = checkedPeople.includes(
-            person.id
-          );
+              <span className="person-count">
+                {positionPeople.length}명
+              </span>
+            </summary>
 
-          return (
-            <label
-              key={person.id}
-              className={`person-row ${
-                isChecked ? "checked" : ""
-              }`}
-            >
-              <div>
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  disabled={!selectedDate}
-                  onChange={() => onCheck(person.id)}
-                />
-              </div>
+            <div className="person-group-list">
+              {positionPeople.map((person) => {
+                const isChecked =
+                  checkedPeople.includes(
+                    person.id
+                  );
 
-              <div className="person-name">
-                {person.name}
-              </div>
-            </label>
-          );
-        })}
+                return (
+                  <label
+                    key={person.id}
+                    className={`person-row ${
+                      isChecked
+                        ? "checked"
+                        : ""
+                    } ${
+                      !selectedDate
+                        ? "disabled"
+                        : ""
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={isChecked}
+                      disabled={!selectedDate}
+                      onChange={() =>
+                        onCheck(person.id)
+                      }
+                    />
 
-      </div>
-
-      <div className="selected-count">
-        {checkedPeople.length}명 선택
-      </div>
-    </>
+                    <span>{person.name}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </details>
+        );
+      })}
+    </div>
   );
 }
 
