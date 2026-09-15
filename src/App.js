@@ -247,7 +247,7 @@ function App() {
       <WordPreview records={periodRecords} people={people} />
 
       {/* 저장된 정보 */}
-      {selectedDate && currentSavedRecords.length > 0 && (
+      {/* {selectedDate && currentSavedRecords.length > 0 && (
         <div className="saved-card">
           <h2>저장된 정보</h2>
 
@@ -279,7 +279,7 @@ function App() {
             ))}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

@@ -610,12 +610,22 @@ button {
 ========================= */
 
 .word-preview-card {
+  width: 100%;
   margin-top: 20px;
-  padding: 24px;
-
+  padding: 28px clamp(18px, 4vw, 40px) 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   background: white;
   border: 1px solid #e5e5e5;
   border-radius: 12px;
+}
+
+.word-preview-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .word-preview-header h2 {
@@ -636,14 +646,20 @@ button {
 }
 .file-name-area {
   display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+  align-items: flex-end;
+  gap: 18px;
+  width: 100%;
+  margin-top: 24px;
+  padding: 18px 20px;
+  background: #f8f9fb;
+  border: 1px solid #edf0f3;
+  border-radius: 10px;
 }
 
 .file-name-area label {
   display: block;
 
-  margin-bottom: 8px;
+  margin-bottom: 7px;
 
   font-size: 14px;
   font-weight: bold;
@@ -653,8 +669,8 @@ button {
   display: flex;
   align-items: center;
 
-  width: 100%;
-  max-width: 500px;
+  width: min(100%, 360px);
+  min-width: 0;
 
   border: 1px solid #ddd;
   border-radius: 7px;
@@ -690,20 +706,23 @@ button {
 .word-preview-area {
   display: flex;
   justify-content: center;
-  align-items: center;
-
-  margin-top: 30px;
-  padding: 30px;
+  align-items: center;  
+  width: 100%;
+  min-height: 900px;
+  margin-top: 28px;
+  padding: 32px;
 
   background: #f1f2f4;
   border-radius: 8px;
+  overflow: auto;
 }
 
 /* A4 */
 
 .word-page {
-  width: 210mm;
-  height: 297mm;
+  flex: 0 0 auto;
+  width: 600px;
+  height: 800px;
 
   background: white;
 
@@ -715,7 +734,7 @@ button {
 .word-content {
   width: 100%;
   height: 100%;
-
+  
   padding-top: 30mm;
 
   text-align: center;
@@ -758,7 +777,7 @@ button {
 
   gap: 20px;
 
-  margin-top: 15px;
+  margin-top: 0;
 }
 
 .word-page-navigation button {
@@ -799,7 +818,8 @@ button {
 /* 데이터 없음 */
 
 .word-empty {
-  margin-top: 30px;
+  width: 100%;
+  margin-top: 28px;
   padding: 50px;
 
   text-align: center;
@@ -811,4 +831,31 @@ button {
   color: #888;
 
   font-size: 14px;
+}
+
+@media (max-width: 720px) {
+  .file-name-area {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .file-name-input {
+    width: 100%;
+  }
+
+  .word-page-navigation {
+    justify-content: space-between;
+  }
+
+  .word-preview-area {
+    min-height: auto;
+    padding: 18px;
+  }
+
+  .word-page {
+    transform: scale(0.82);
+    transform-origin: center center;
+    margin: -72px 0;
+  }
 }

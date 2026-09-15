@@ -192,7 +192,7 @@ function WordPreview({ records, people }) {
             },
             children: [
               new TextRun({
-                text: personTexts.join("     "),
+                text: personTexts.join(",     "),
                 bold: true,
                 size: 50, // 25pt
                 font: "MyFont",
@@ -283,59 +283,9 @@ function WordPreview({ records, people }) {
           />
 
           <span>.docx</span>
+          
         </div>
-      </div>
-
-      {/* 미리보기 */}
-      {pages.length > 0 ? (
-        <>
-          <div className="word-preview-area">
-            <div className="word-page">
-              <div className="word-content">
-                <div>
-                  {formatDate(
-                    page.date
-                  )}{" "}
-                  IT사업부 급식비
-                </div>
-
-                <div className="word-people">
-                  {makeRows(
-                    page.people
-                  ).map(
-                    (row, rowIndex) => (
-                      <div
-                        key={rowIndex}
-                        className="word-people-row"
-                      >
-                        {row.map((id) => {
-                          const person =
-                            getPerson(id);
-
-                          return (
-                            <span
-                              key={id}
-                              className="word-person"
-                            >
-                              {
-                                person.position
-                              }{" "}
-                              {
-                                person.name
-                              }
-                            </span>
-                          );
-                        })}
-                      </div>
-                    )
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* 페이지 이동 */}
-          <div className="word-page-navigation">
+           <div className="word-page-navigation">
             <button
               type="button"
               onClick={handlePrevious}
@@ -362,6 +312,61 @@ function WordPreview({ records, people }) {
               ›
             </button>
           </div>
+      </div>
+
+      {/* 미리보기 */}
+      {pages.length > 0 ? (
+        <>
+          <div className="word-preview-area">
+            <div className="word-page">
+              <div className="word-content">
+                <div>
+                  {formatDate(
+                    page.date
+                  )}{" "}
+                  IT사업부 급식비
+                </div>
+
+                <div className="word-people">
+                  {makeRows(
+                    page.people
+                  ).map(
+                    (row, rowIndex) => (
+                      <div
+                        key={rowIndex}
+                        className="word-people-row"
+                      >
+                        {row.map((id, personIndex) => {
+                          const person =
+                            getPerson(id);
+
+                          return (
+                            <span
+                              key={id}
+                              className="word-person"
+                            >
+                              {
+                                person.position
+                              }{" "}
+                              {
+                                person.name
+                              }
+                              {personIndex < row.length - 1
+                                ? ","
+                                : ""}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 페이지 이동 */}
+       
         </>
       ) : (
         <div className="word-empty">
