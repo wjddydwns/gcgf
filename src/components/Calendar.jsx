@@ -1,73 +1,89 @@
-function Calendar({ selectedDate, savedData, onDateClick }) {
-  const days = Array.from({ length: 30 }, (_, i) => i + 1);
+import { useState } from "react";
 
-  // 2026년 9월 1일은 화요일
-  const startDay = 2;
+function Calendar({ selectedDate, savedData, onDateClick }) {
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+
+  // 이전 달
+  const handlePreviousMonth = () => {
+    if (currentMonth === 0) {
+      setCurrentYear((prev) => prev - 1);
+      setCurrentMonth(11);
+    } else {
+      setCurrentMonth((prev) => prev - 1);
+    }
+  };
+
+  // 다음 달
+  const handleNextMonth = () => {
+    if (currentMonth === 11) {
+      setCurrentYear((prev) => prev + 1);
+      setCurrentMonth(0);
+    } else {
+      setCurrentMonth((prev) => prev + 1);
+    }
+  };
+
+  // 해당 월의 마지막 날짜
+  const lastDay = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  // 해당 월 1일의 요일
+  const startDay = new Date(currentYear, currentMonth, 1).getDay();
+
+  const days = Array.from({ length: lastDay }, (_, index) => index + 1);
 
   return (
-    <div className="card">
-      <h2>날짜 선택</h2>
+    <div className="calendar-card">
+      <div className="calendar-header">
+        <button type="button" onClick={handlePreviousMonth}>
+          ‹
+        </button>
 
-      <div className="calendar">
+        <h2>
+          {currentYear}년 {currentMonth + 1}월
+        </h2>
 
-        <div className="calendar-header">
-          <button>‹</button>
+        <button type="button" onClick={handleNextMonth}>
+          ›
+        </button>
+      </div>
 
-          <h3>2026년 9월</h3>
+      <div className="calendar-week">
+        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
+          <div key={day}>{day}</div>
+        ))}
+      </div>
 
-          <button>›</button>
-        </div>
+      <div className="calendar-days">
+        {/* 1일 전 빈칸 */}
+        {Array.from({ length: startDay }).map((_, index) => (
+          <div key={`empty-${index}`} className="empty-day" />
+        ))}
 
-        {/* 요일 */}
-        <div className="calendar-week">
-          {["일", "월", "화", "수", "목", "금", "토"].map(
-            (day) => (
-              <div key={day}>{day}</div>
-            )
-          )}
-        </div>
+        {days.map((day) => {
+          const date = `${currentYear}-${String(currentMonth + 1).padStart(
+            2,
+            "0",
+          )}-${String(day).padStart(2, "0")}`;
 
-        {/* 날짜 */}
-        <div className="calendar-days">
+          const isSelected = selectedDate === date;
 
-          {/* 빈칸 */}
-          {Array.from({ length: startDay }).map(
-            (_, index) => (
-              <div key={`empty-${index}`} />
-            )
-          )}
+          const isSaved = savedData[date];
 
-          {days.map((day) => {
-            const date = `2026-09-${String(day).padStart(
-              2,
-              "0"
-            )}`;
+          return (
+            <button
+              key={day}
+              type="button"
+              className={`date ${isSelected ? "selected" : ""}`}
+              onClick={() => onDateClick(date)}
+            >
+              <span>{day}</span>
 
-            const isSelected = selectedDate === date;
-            const isSaved = savedData[date];
-
-            return (
-              <button
-                key={day}
-                className={`date ${
-                  isSelected ? "selected" : ""
-                }`}
-                onClick={() => onDateClick(date)}
-              >
-                <span>{day}</span>
-
-                {isSaved && (
-                  <small>
-                    {isSaved.type === "individual"
-                      ? "개인"
-                      : "단체"}
-                  </small>
-                )}
-              </button>
-            );
-          })}
-
-        </div>
+              {isSaved && <small>저장됨</small>}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

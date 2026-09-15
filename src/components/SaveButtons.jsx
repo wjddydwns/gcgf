@@ -1,26 +1,13 @@
-function SaveButtons({
-  onSaveIndividual,
-  onSaveGroup,
-}) {
+function SaveButton({ onSave }) {
   return (
-    <div className="save-buttons">
-
-      <button
-        className="individual-button"
-        onClick={onSaveIndividual}
-      >
-        개인으로 저장
-      </button>
-
-      <button
-        className="group-button"
-        onClick={onSaveGroup}
-      >
-        단체로 저장
-      </button>
-
-    </div>
+    <button
+      type="button"
+      className="save-button"
+      onClick={onSave}
+    >
+      저장
+    </button>
   );
 }
 
-export default SaveButtons;
+export default SaveButton;
